@@ -3,7 +3,7 @@
     <ul class="relative overflow-x-auto flex text-xs text-zinc-600 p-2" ref="ulTarget">
       <!-- 下拉图标 -->
       <li class="fixed top-0 right-[-1px] bg-white px-1 shadow-l-white h-9 flex items-center z-20">
-        <m-svg-icon class="w-3.5 h-3.5" name="hamburger"></m-svg-icon>
+        <m-svg-icon class="w-3.5 h-3.5" name="hamburger" @click="setShowPopup"></m-svg-icon>
       </li>
       <!-- 滑块 -->
       <li ref="barTarget" :style="barStyle" class="absolute h-[22px] bg-zinc-900 rounded-xl duration-200 z-10"></li>
@@ -16,6 +16,7 @@
       </li>
     </ul>
   </div>
+  <m-popup :data="data" v-if="isShowPopup"></m-popup>
 </template>
 
 <script setup>
@@ -71,6 +72,13 @@ watch(currentActiveIndex, (activeIndex) => {
     width: width + 'px'
   }
 })
+
+// 定义popup控制显隐的变量
+let isShowPopup = ref(false)
+// 点击显示popup
+const setShowPopup = () => {
+  isShowPopup.value = true
+}
 </script>
 
 <style scoped>
