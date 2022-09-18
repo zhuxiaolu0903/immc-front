@@ -16,13 +16,17 @@
       </li>
     </ul>
   </div>
-  <m-popup :data="data" v-if="isShowPopup"></m-popup>
+  <m-popup v-model="isShowPopup">
+    <!-- 弹窗内容 -->
+    <menu-value :data="data" @onSelectItem="onSelectItem"></menu-value>
+  </m-popup>
 </template>
 
 <script setup>
 // 接收prop   在script setup中可以直接使用defineProps
 import {onBeforeUpdate, ref, watch} from "vue";
 import {useScroll} from "@vueuse/core";
+import menuValue from '../../menu/index.vue'
 
 defineProps({
   data: {
@@ -55,13 +59,14 @@ let currentActiveIndex = ref(0)
 // 用户选中某一项
 const onSelectItem = (index) => {
   currentActiveIndex.value = index
+  // 如果此时popup打开了，需要关闭
+  if (isShowPopup.value) isShowPopup.value = false
 }
 
 // 定义ul的ref
 const ulTarget = ref(null)
 // 获取当前ul容器的横向滚动距离
 const {x: ulScrollLeft} = useScroll(ulTarget)
-
 // 监听当前激活的item index，实时修改滑块的style
 watch(currentActiveIndex, (activeIndex) => {
   // 获取当前激活的item的位置和宽度
