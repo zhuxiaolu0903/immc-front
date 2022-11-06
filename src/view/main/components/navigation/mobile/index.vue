@@ -19,7 +19,7 @@
   </div>
   <m-popup v-model="isShowPopup">
     <!-- 弹窗内容 -->
-    <menu-vue :data="data" @onSelectItem="onSelectItem"></menu-vue>
+    <menu-vue :data="data" :activeIndex="currentActiveIndex" @onSelectItem="onSelectItem"></menu-vue>
   </m-popup>
 </template>
 
