@@ -8,7 +8,7 @@
     </transition>
     <transition name="slide">
       <!-- 容器 -->
-      <div class="fixed bottom-0 w-screen bg-white z-50 rounded-md" v-bind="$attrs"
+      <div class="fixed bottom-0 w-screen bg-white z-50 rounded-t-lg" v-bind="$attrs"
            v-if="isShowPopup">
         <!-- 内容 -->
         <slot></slot>

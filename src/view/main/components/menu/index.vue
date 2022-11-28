@@ -1,12 +1,12 @@
 <template>
   <div class="flex flex-col h-[80vh]">
-    <h4 class="px-4 py-2">所有分类</h4>
+    <h4 class="px-2 py-2 text-base">所有分类</h4>
     <m-scroll :data="data" class="overflow-hidden" ref="scrollRef">
       <ul>
-        <li class="px-4 py-2 text-sm text-zinc-900" :class="{'active-item-box': index === currentActiveIndex}" v-for="(item, index) in data" :key="item.id" @click="onItemClick(index)" :ref="e => {
+        <li class="px-2 py-1 text-sm text-zinc-900" :class="{'active-item-box': index === activeIndex}" v-for="(item, index) in data" :key="item.id" @click="onItemClick(index)" :ref="e => {
           itemDOMList[index] = e
         }">
-          <div v-if="index !== currentActiveIndex">{{ item.name }}</div>
+          <div v-if="index !== activeIndex">{{ item.name }}</div>
           <div class="active-item" v-else>
             <span>{{ item.name }}</span>
             <i></i>
@@ -37,21 +37,16 @@ import {nextTick, onMounted, ref, watch} from "vue";
   const itemDOMList = []
   // scroll ref
   const scrollRef = ref(null)
-  // 当前激活项
-  let currentActiveIndex = ref(props.activeIndex)
   // 点击某一项
   const onItemClick = (index) => {
-    currentActiveIndex.value = index
-    setTimeout(() => {
-      emit('onSelectItem', index)
-    }, 500)
+    emit('onSelectItem', index)
   }
 
   watch(scrollRef, () => {
     if (scrollRef.value) {
       setTimeout(() => {
         // 将滚动条设置到指定位置
-        scrollRef.value.scrollToElement(itemDOMList[currentActiveIndex.value], 300, true)
+        scrollRef.value.scrollToElement(itemDOMList[props.activeIndex], 300, true)
       }, 20)
     }
   }, {
@@ -61,7 +56,7 @@ import {nextTick, onMounted, ref, watch} from "vue";
 
 <style scoped>
 .active-item-box {
-  border-bottom: 4px dotted #f2f2f2;
+  background-color: #f1f1f1;
 }
 .active-item {
   display: flex;

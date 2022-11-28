@@ -1,20 +1,16 @@
 <template>
-  <mobile-navigation-vue v-if="isMobileTerminal" :data="categoryData"/>
+  <mobile-navigation-vue v-if="isMobileTerminal"/>
+  <pc-navigation-vue v-else></pc-navigation-vue>
 </template>
 
 <script setup>
+import mobileNavigationVue from './mobile/index.vue'
+import pcNavigationVue from './pc/index.vue'
 import {isMobileTerminal} from "@/utils/flexible.js";
-import mobileNavigationVue from "./mobile/index.vue";
-import {getCategory} from "@/api/category.js";
-import {ref} from "vue";
+import {useStore} from 'vuex'
 
-// 声明响应式数据，并赋初始值
-const categoryData = ref([])
-const getCategoryDate = async () => {
-  const {categorys} = await getCategory()
-  categoryData.value = categorys
-}
-getCategoryDate()
+const store = useStore()
+store.dispatch('useCategoryData')
 </script>
 
 <style scoped>

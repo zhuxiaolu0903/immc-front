@@ -1,11 +1,11 @@
 <template>
-  <div class="bg-white sticky top-0 left-0 z-10">
+  <div class="bg-white sticky top-0 left-0 z-10 leading-[0.6rem]">
     <m-scroll class="relative overflow-hidden whitespace-nowrap" :data="data" :listenScroll="true" :probeType="3" @scroll="onScroll" ref="scrollRef">
-      <ul class="inline-block text-xs text-zinc-600 p-2">
+      <ul class="inline-block text-xs text-zinc-600 p-1" v-if="data[currentActiveIndex]">
         <!-- 滑块 -->
-        <li ref="barTarget" :style="barStyle" class="absolute px-4 py-1 h-[22px] text-zinc-100 bg-zinc-900 rounded-xl duration-200">{{data[currentActiveIndex].name}}</li>
+        <li ref="barTarget" :style="barStyle" class="absolute px-1.5 py-0.5 h-[22px] text-zinc-100 bg-zinc-900 rounded-xl duration-200">{{data[currentActiveIndex].name}}</li>
         <!-- 分类 -->
-        <li v-for="(item, index) in data" class="inline-block px-4 py-1 last:mr-6" :ref="el => {
+        <li v-for="(item, index) in data" class="inline-block px-1.5 py-0.5 last:mr-6" :ref="el => {
           itemDOMList[index] = el
         }"
             @click="onSelectItem(index)">{{ item.name }}
@@ -13,8 +13,8 @@
       </ul>
     </m-scroll>
     <!-- 下拉图标 -->
-    <div class="fixed top-0 right-[-1px] bg-white px-1 shadow-l-white h-9 flex items-center z-20">
-      <m-svg-icon class="w-3.5 h-3.5" name="hamburger" @click="setShowPopup"></m-svg-icon>
+    <div class="fixed top-0 right-[-1px] bg-white px-1 py-1.5 shadow-l-white flex items-center z-20">
+      <m-svg-icon class="w-1.5 h-1.5" name="hamburger" @click="setShowPopup"></m-svg-icon>
     </div>
   </div>
   <m-popup v-model="isShowPopup">
@@ -25,20 +25,17 @@
 
 <script setup>
 // 接收prop   在script setup中可以直接使用defineProps
-import {onBeforeUpdate, ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import MenuVue from "@/view/main/components/menu/index.vue";
+import {useStore} from "vuex";
 
-defineProps({
-  data: {
-    type: Array,
-    require: true
-  }
-})
+// 获取数据
+const store = useStore()
+const data = computed(() => store.getters.categorys)
 
 // 定义滑块的style
 const barStyle = ref({
-  transform: 'translateX(0px)',
-  width: '66px'
+  transform: 'translateX(0px)'
 })
 
 // 获取所有分类的li DOM，定义ref array
@@ -62,7 +59,7 @@ const onSelectItem = (index) => {
 let scrollLeft = ref(0)
 // 获取滚动距离
 const onScroll = (pos) => {
-  scrollLeft = Math.abs(Math.round(pos.x))
+  scrollLeft.value = Math.abs(Math.round(pos.x))
 }
 
 // 监听当前激活的item index，实时修改滑块的style
@@ -71,7 +68,7 @@ watch(currentActiveIndex, (activeIndex) => {
   const {left, width} = itemDOMList[activeIndex].getBoundingClientRect()
   // 设置滚动条的样式，移动距离 = ul横向滚动距离 + 当前激活item距离屏幕左侧的距离 - ul的padding
   barStyle.value = {
-    transform: `translateX(${scrollLeft + left - 8}px)`,
+    transform: `translateX(${scrollLeft.value + left - 8}px)`,
     width: width + 'px'
   }
 })
